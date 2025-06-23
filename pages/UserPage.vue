@@ -86,33 +86,41 @@
               <font-awesome-icon icon="file-alt" />
               Program Reports
             </h3>
-            <div v-for="report in data.reports" :key="report.id"
-              class="mb-4 flex items-center justify-between rounded-lg bg-secondary/20 p-4 shadow">
-              <div class="flex items-center gap-4 cursor-pointer">
-                <div
-                  class="h-16 w-16 flex items-center justify-center rounded-full bg-primary text-white text-xl font-bold">
-                  {{ report.severityLevel.charAt(0).toUpperCase() }}
+            <div v-if="data.reports.length > 0">
+
+              <div v-for="report in data.reports" :key="report.id"
+                class="mb-4 flex items-center justify-between rounded-lg bg-secondary/20 p-4 shadow">
+                <div class="flex items-center gap-4 cursor-pointer">
+                  <div
+                    class="h-16 w-16 flex items-center justify-center rounded-full bg-primary text-white text-xl font-bold">
+                    {{ report.severityLevel.charAt(0).toUpperCase() }}
+                  </div>
+                  <div>
+                    <h4 class="text-lg font-bold text-white">{{ report.vulnerabilityTitle }}</h4>
+                    <p class="text-sm text-white">
+                      Target: {{ report.vulnerabilityTarget }} • Category: {{ report.vulnerabilityCategory }}
+                    </p>
+                    <p class="text-xs text-white mt-1">
+                      Severity: {{ report.severityLevel }} • Vector: {{ report.attackVector }} • Scope: {{ report.scope
+                      }}
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 class="text-lg font-bold text-white">{{ report.vulnerabilityTitle }}</h4>
-                  <p class="text-sm text-white">
-                    Target: {{ report.vulnerabilityTarget }} • Category: {{ report.vulnerabilityCategory }}
+                <div class="text-right">
+                  <p class="text-sm font-medium text-white">
+                    Complexity: <span class="text-yellow-300">{{ report.attackComplexity }}</span>
                   </p>
-                  <p class="text-xs text-white mt-1">
-                    Severity: {{ report.severityLevel }} • Vector: {{ report.attackVector }} • Scope: {{ report.scope }}
-                  </p>
+                  <div class="mt-2 flex flex-wrap gap-1 text-xs text-white">
+                    <span class="rounded bg-red-600/20 px-2 py-1">Conf: {{ report.confidentiality }}</span>
+                    <span class="rounded bg-blue-500/20 px-2 py-1">Integ: {{ report.integrity }}</span>
+                    <span class="rounded bg-green-500/20 px-2 py-1">Avail: {{ report.availability }}</span>
+                  </div>
                 </div>
               </div>
-              <div class="text-right">
-                <p class="text-sm font-medium text-white">
-                  Complexity: <span class="text-yellow-300">{{ report.attackComplexity }}</span>
-                </p>
-                <div class="mt-2 flex flex-wrap gap-1 text-xs text-white">
-                  <span class="rounded bg-red-600/20 px-2 py-1">Conf: {{ report.confidentiality }}</span>
-                  <span class="rounded bg-blue-500/20 px-2 py-1">Integ: {{ report.integrity }}</span>
-                  <span class="rounded bg-green-500/20 px-2 py-1">Avail: {{ report.availability }}</span>
-                </div>
-              </div>
+            </div>
+            <div v-else>
+              <h1 class="px-2 text-hookYellow font-bold text-lg">
+                you don't have any reports</h1>
             </div>
 
           </div>
@@ -122,40 +130,45 @@
               Admin Programs
             </h3>
 
-            <div v-for="program in data.programs" :key="program.id"
-              class="mb-4 flex items-center justify-between rounded-lg bg-secondary/20 p-4 shadow">
-              <nuxt-link :to="localePath(`/programs/${program.id}`)">
-                <div class="flex items-center gap-4 cursor-pointer">
-                  <img :src="`https://zeropoint.runasp.net${program.image}`" :alt="program.title"
-                    class="h-16 w-16 rounded-full object-cover" />
-                  <div>
-                    <h4 class="text-lg font-bold text-white">{{ program.title }}</h4>
-                    <p class="text-sm  text-white">
-                      {{ program.companyName }} • {{ program.collaborationType }}
-                    </p>
-                    <p class="text-xs text-white mt-1">
-                      Vulnerabilities: {{ program.vulnerabilitiesCount }} • Efficiency: {{
-                        program.responseEfficiency
-                      }}%
-                    </p>
+            <div v-if="data.programs.length > 0">
+              <div v-for="program in data.programs" :key="program.id"
+                class="mb-4 flex items-center justify-between rounded-lg bg-secondary/20 p-4 shadow">
+                <nuxt-link :to="localePath(`/programs/${program.id}`)">
+                  <div class="flex items-center gap-4 cursor-pointer">
+                    <img :src="`https://zeropoint.runasp.net${program.image}`" :alt="program.title"
+                      class="h-16 w-16 rounded-full object-cover" />
+                    <div>
+                      <h4 class="text-lg font-bold text-white">{{ program.title }}</h4>
+                      <p class="text-sm  text-white">
+                        {{ program.companyName }} • {{ program.collaborationType }}
+                      </p>
+                      <p class="text-xs text-white mt-1">
+                        Vulnerabilities: {{ program.vulnerabilitiesCount }} • Efficiency: {{
+                          program.responseEfficiency
+                        }}%
+                      </p>
+                    </div>
                   </div>
-                </div>
-              </nuxt-link>
-              <div class="text-right">
-                <p class="text-sm font-medium text-white">Status:
-                  <span :class="program.programStatus === 'activity' ? 'text-green-400' : 'text-red-400'">
-                    {{ program.programStatus }}
-                  </span>
-                </p>
-                <div class="mt-2 flex flex-wrap gap-1 text-xs text-white">
-                  <span class="rounded bg-red-600/20 px-2 py-1">Critical: {{ program.critical }}</span>
-                  <span class="rounded bg-yellow-500/20 px-2 py-1">High: {{ program.high }}</span>
-                  <span class="rounded bg-blue-500/20 px-2 py-1">Medium: {{ program.medium }}</span>
-                  <span class="rounded bg-green-500/20 px-2 py-1">Low: {{ program.low }}</span>
+                </nuxt-link>
+                <div class="text-right">
+                  <p class="text-sm font-medium text-white">Status:
+                    <span :class="program.programStatus === 'activity' ? 'text-green-400' : 'text-red-400'">
+                      {{ program.programStatus }}
+                    </span>
+                  </p>
+                  <div class="mt-2 flex flex-wrap gap-1 text-xs text-white">
+                    <span class="rounded bg-red-600/20 px-2 py-1">Critical: {{ program.critical }}</span>
+                    <span class="rounded bg-yellow-500/20 px-2 py-1">High: {{ program.high }}</span>
+                    <span class="rounded bg-blue-500/20 px-2 py-1">Medium: {{ program.medium }}</span>
+                    <span class="rounded bg-green-500/20 px-2 py-1">Low: {{ program.low }}</span>
+                  </div>
                 </div>
               </div>
             </div>
-
+            <div v-else>
+              <h1 class="px-2 text-hookYellow font-bold text-lg">
+                you don't have any Programs</h1>
+            </div>
           </div>
         </div>
       </div>
