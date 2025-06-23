@@ -38,9 +38,37 @@
                   <span>{{ post.isLikedByCurrentUser ? "❤️" : "💛" }}</span>
                   <span>{{ post.likeCount }}</span>
                 </button>
-                <span>💬 {{ post.commentCount }}</span>
+                <!-- <span>💬 {{ post.commentCount }}</span> -->
+                <button @click="openComments(post.id)" class="text-white hover:underline">
+                  💬 {{ post.commentCount }}
+                </button>
                 <span>🔁 {{ post.shareCount }}</span>
               </div>
+            </div>
+          </div>
+          <div v-if="showModal"
+            class="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center  justify-center z-50 px-4">
+            <div class="bg-gray-800 text-white p-6 rounded-xl w-full max-w-xl relative">
+              <button @click="closeModal"
+                class="absolute top-3 right-3 text-gray-400 hover:text-white text-4xl">&times;</button>
+              <h2 class="text-2xl font-semibold mb-4 text-center">Add a Comment</h2>
+
+              <!-- Comment Textarea -->
+              <textarea v-model="commentContent" rows="4"
+                class="w-full p-3 rounded-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                placeholder="Write your comment here..."></textarea>
+
+              <p v-if="commentError" class="mt-2 text-sm text-red-400">{{ commentError }}</p>
+
+              <button @click="submitComment"
+                class="mt-5 group/edit mx-auto flex w-fit items-center justify-center gap-3 rounded-full bg-hookYellow px-10 py-3 text-center text-xl font-medium tracking-wider text-black transition-all duration-300 ease-in-out hover:scale-105"
+                :disabled="loading">
+                {{ loading ? 'Submitting...' : 'Submit Comment' }}
+              </button>
+
+              <p v-if="message" :class="`mt-3 text-sm text-center ${error ? 'text-red-400' : 'text-green-400'}`">
+                {{ message }}
+              </p>
             </div>
           </div>
 
@@ -73,7 +101,7 @@
 <script setup>
 import { useRoute, useRouter, useRuntimeConfig } from "#app";
 import { ref, computed, watch } from "vue";
-
+import * as yup from 'yup'
 const route = useRoute();
 const router = useRouter();
 const runtimeConfig = useRuntimeConfig();
@@ -84,6 +112,80 @@ const pageSize = 10;
 
 const data = ref(null);
 const pending = ref(false);
+
+
+
+// 💬 Comments Modal
+const showModal = ref(false)
+const commentContent = ref('')
+const selectedPostId = ref(null)
+const loading = ref(false)
+const message = ref('')
+const error = ref(false)
+
+const openComments = (postId) => {
+  selectedPostId.value = postId
+  showModal.value = true
+  commentContent.value = ''
+  message.value = ''
+  error.value = false
+}
+
+const commentError = ref('')
+
+const commentSchema = yup.object({
+  content: yup.string().required('Comment is required').min(3, 'Comment must be at least 3 characters'),
+})
+
+const closeModal = () => {
+  showModal.value = false
+}
+
+const submitComment = async () => {
+  loading.value = true
+  message.value = ''
+  error.value = false
+  commentError.value = ''
+
+  try {
+    // ✅ Validate input
+    await commentSchema.validate({ content: commentContent.value }, { abortEarly: false })
+
+    const { error: fetchError } = await useFetch(`${runtimeConfig.public.BaseApi}/Comments`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+        'Content-Type': 'application/json',
+      },
+      body: {
+        content: commentContent.value,
+        postId: selectedPostId.value,
+      },
+    })
+
+    if (fetchError.value) throw new Error(fetchError.value.message)
+
+    message.value = 'Comment submitted successfully!'
+    showModal.value = false
+    commentContent.value = ''
+
+
+    // ✅ Optional: update local comment count
+    const post = data.value?.posts?.find(p => p.id === selectedPostId.value)
+    if (post) post.commentCount++
+
+  } catch (err) {
+    if (err.name === 'ValidationError') {
+      commentError.value = err.errors[0] // أول رسالة خطأ
+    } else {
+      error.value = true
+      message.value = 'Failed to submit comment.'
+      console.error(err)
+    }
+  } finally {
+    loading.value = false
+  }
+}
 
 const toggleLike = async (post) => {
   try {
