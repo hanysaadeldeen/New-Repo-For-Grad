@@ -6,7 +6,6 @@
 
 <script setup lang="ts">
 const param = useRoute();
-console.log(param);
 </script>
 
 <style scoped></style>

@@ -55,9 +55,6 @@ const { params } = useRoute()
 
 const { AllReports, getProgramReports } = ProgramReports()
 
-
-console.log(AllReports);
-
 onMounted(() => {
     if (params.id) {
         getProgramReports(params.id)

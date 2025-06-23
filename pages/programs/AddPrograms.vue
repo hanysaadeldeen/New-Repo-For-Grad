@@ -40,7 +40,7 @@
         }}</span>
       </Field>
 
-      <img v-if="imagePreview" :src="imagePreview" alt="Preview" class="mt-4 h-48 w-full rounded object-cover" />
+      <img v-if="imagePreview" :src="imagePreview" alt="Preview" class="mt-4 w-24 h-24  rounded-full object-cover" />
     </div>
     <!-- Targets -->
     <div class="mb-4">
@@ -243,7 +243,7 @@
 
     <!-- Submit Button -->
     <button :disabled="submitLoading" type="submit"
-      class="w-full rounded-xl bg-gradient-to-l from-primary to-secondary px-16 py-2 text-2xl font-medium capitalize tracking-wider text-white md:w-fit"
+      class="group/edit mx-auto flex w-fit items-center justify-center gap-3 rounded-full bg-hookYellow px-10 py-3 text-center text-xl font-medium tracking-wider text-black transition-all duration-300 ease-in-out hover:scale-105"
       :class="{ 'cursor-not-allowed opacity-50': submitLoading }">
       {{ submitLoading ? "Submitting..." : "Add Program" }}
     </button>
@@ -291,20 +291,20 @@ const targets = ref<Target[]>([
 const router = useRouter();
 // Define Yup schema
 const schema = Yup.object({
-  // image: Yup.mixed()
-  //   .required("Image is required")
-  //   .test("fileType", "Unsupported file format", (value) =>
-  //     value
-  //       ? ["image/jpeg", "image/png", "image/JPG", "image/webp"].includes(
-  //           value.type,
-  //         )
-  //       : true,
-  //   )
-  //   .test(
-  //     "fileSize",
-  //     "File is too large",
-  //     (value) => (value ? value.size <= 5 * 1024 * 1024 : true), // 5MB
-  //   ),
+  image: Yup.mixed()
+    .required("Image is required")
+    .test("fileType", "Unsupported file format", (value) =>
+      value
+        ? ["image/jpeg", "image/png", "image/JPG", "image/webp"].includes(
+          value.type,
+        )
+        : true,
+    )
+    .test(
+      "fileSize",
+      "File is too large",
+      (value) => (value ? value.size <= 5 * 1024 * 1024 : true), // 5MB
+    ),
 
   collaborationType: Yup.string()
     .required("collaboration Type are required")
@@ -315,7 +315,7 @@ const schema = Yup.object({
   companyName: Yup.string()
     .required("company Name are required")
     .min(2, "company Name must be at least 2 characters"),
-  image: Yup.string().required("company image are required"),
+  // image: Yup.string().required("company image are required"),
 
   targets: Yup.array()
     .of(
@@ -414,7 +414,6 @@ const onSubmit = async (values: any) => {
     focusArea: "Web Security",
     responseEfficiency: Number(values.responseEfficiency) || 50,
   };
-  // console.log(data);
 
   const response = await addProgram(data);
   if (response) {

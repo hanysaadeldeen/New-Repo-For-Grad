@@ -1,11 +1,7 @@
 <template>
   <div class="overflow-hidden text-white transition-colors duration-200">
     <!-- Main form column -->
-    <Form
-      @submit="onSubmit"
-      :validation-schema="schema"
-      v-slot="{ errors, submitCount }"
-    >
+    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, submitCount }">
       <div class="flex flex-col gap-8 px-2 md:flex-row">
         <div class="report-section1 flex-1">
           <h1 class="mb-6 text-3xl font-bold">Submit Report</h1>
@@ -16,20 +12,11 @@
             </h2>
 
             <div class="mb-4">
-              <label
-                class="mb-1 block cursor-pointer text-base font-medium"
-                for="title"
-                >Vulnerability Title</label
-              >
-              <Field
-                id="title"
-                name="VulnerabilityTitle"
-                type="text"
+              <label class="mb-1 block cursor-pointer text-base font-medium" for="title">Vulnerability Title</label>
+              <Field id="title" name="VulnerabilityTitle" type="text"
                 placeholder="Short description of the vulnerability and the affected asset"
                 class="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
-                :class="{ 'border-red-500': errors.VulnerabilityTitle }"
-                v-model="title"
-              />
+                :class="{ 'border-red-500': errors.VulnerabilityTitle }" v-model="title" />
               <span class="text-sm text-red-500">{{
                 errors.VulnerabilityTitle
               }}</span>
@@ -39,26 +26,14 @@
           <!-- Target section -->
           <div class="mb-8">
             <h2 class="mb-4 text-lg font-medium">Target</h2>
-            <label
-              for="target"
-              class="mb-2 inline-block cursor-pointer text-base"
-              >Specify the vulnerability target.</label
-            >
+            <label for="target" class="mb-2 inline-block cursor-pointer text-base">Specify the vulnerability
+              target.</label>
 
-            <Field
-              id="target"
-              name="VulnerabilityTarget"
-              v-model="selectedTarget"
-              as="select"
+            <Field id="target" name="VulnerabilityTarget" v-model="selectedTarget" as="select"
               class="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
-              :class="{ 'border-red-500': errors.VulnerabilityTarget }"
-            >
+              :class="{ 'border-red-500': errors.VulnerabilityTarget }">
               <option value="" disabled>Select the vulnerability target</option>
-              <option
-                v-for="target in vulnerabilityTargets"
-                :key="target"
-                :value="target"
-              >
+              <option v-for="target in vulnerabilityTargets" :key="target" :value="target">
                 {{ target }}
               </option>
             </Field>
@@ -69,27 +44,14 @@
 
           <!-- Vulnerability category -->
           <div class="mb-8">
-            <label
-              for="category"
-              class="mb-2 inline-block cursor-pointer text-base"
-              >Vulnerability category</label
-            >
+            <label for="category" class="mb-2 inline-block cursor-pointer text-base">Vulnerability category</label>
 
-            <Field
-              name="VulnerabilityCategory"
-              as="select"
-              id="category"
-              v-model="selectedCategory"
-              class="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
-            >
+            <Field name="VulnerabilityCategory" as="select" id="category" v-model="selectedCategory"
+              class="w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2">
               <option value="" disabled>
                 Select the type of vulnerability you have discovered
               </option>
-              <option
-                v-for="category in vulnerabilityCategories"
-                :key="category"
-                :value="category"
-              >
+              <option v-for="category in vulnerabilityCategories" :key="category" :value="category">
                 {{ category }}
               </option>
             </Field>
@@ -105,9 +67,7 @@
             <div class="rounded-md bg-gray-800 p-6">
               <p class="mb-2 text-base">
                 We use the
-                <a href="#" class="text-blue-500 hover:underline"
-                  >Common Vulnerability Scoring System</a
-                >
+                <a href="#" class="text-blue-500 hover:underline">Common Vulnerability Scoring System</a>
                 to assess the severity of your vulnerability.
               </p>
               <p class="mb-4 text-base">
@@ -116,88 +76,36 @@
               </p>
 
               <!-- Severity buttons -->
-              <Field
-                name="SeverityLevel"
-                as="input"
-                type="hidden"
-                v-model="selectedSeverity"
-              />
+              <Field name="SeverityLevel" as="input" type="hidden" v-model="selectedSeverity" />
 
               <!-- Severity Buttons -->
               <div class="mb- border-b border-gray-600 pb-4">
                 <div class="6 flex flex-wrap gap-2">
-                  <button
-                    v-for="severity in severityLevels"
-                    :key="severity.value"
-                    :class="[
-                      'flex items-center gap-2 rounded-md border-4 px-4 py-2',
-                      selectedSeverity === severity.value
-                        ? `${severity.color} scale-110 border-hookYellow`
-                        : `${severity.color} border-transparent`,
-                    ]"
-                    type="button"
-                    @click="selectedSeverity = severity.value"
-                  >
-                    <span
-                      v-if="severity.value !== 'none'"
-                      :class="`h-2 w-2 rounded-full ${severity.dotColor}`"
-                    ></span>
+                  <button v-for="severity in severityLevels" :key="severity.value" :class="[
+                    'flex items-center gap-2 rounded-md border-4 px-4 py-2',
+                    selectedSeverity === severity.value
+                      ? `${severity.color} scale-110 border-hookYellow`
+                      : `${severity.color} border-transparent`,
+                  ]" type="button" @click="selectedSeverity = severity.value">
+                    <span v-if="severity.value !== 'none'" :class="`h-2 w-2 rounded-full ${severity.dotColor}`"></span>
                     <span>{{ severity.label }}</span>
                   </button>
                 </div>
-                <p
-                  class="mt-3 text-sm text-red-500"
-                  v-if="submitCount > 0 && errors.SeverityLevel"
-                >
+                <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.SeverityLevel">
                   {{ errors.SeverityLevel }}
                 </p>
               </div>
 
               <!-- CVSS Metrics grid -->
               <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <Field
-                  name="AttackVector"
-                  as="input"
-                  type="hidden"
-                  v-model="AttackVector"
-                />
+                <Field name="AttackVector" as="input" type="hidden" v-model="AttackVector" />
                 <Field name="Scope" as="input" type="hidden" v-model="scope" />
-                <Field
-                  name="AttackComplexity"
-                  as="input"
-                  type="hidden"
-                  v-model="attackComplexity"
-                />
-                <Field
-                  name="Confidentiality"
-                  as="input"
-                  type="hidden"
-                  v-model="confidentiality"
-                />
-                <Field
-                  name="PrivilegesRequired"
-                  as="input"
-                  type="hidden"
-                  v-model="privilegesRequired"
-                />
-                <Field
-                  name="Integrity"
-                  as="input"
-                  type="hidden"
-                  v-model="integrity"
-                />
-                <Field
-                  name="UserInteraction"
-                  as="input"
-                  type="hidden"
-                  v-model="userInteraction"
-                />
-                <Field
-                  name="Availability"
-                  as="input"
-                  type="hidden"
-                  v-model="availability"
-                />
+                <Field name="AttackComplexity" as="input" type="hidden" v-model="attackComplexity" />
+                <Field name="Confidentiality" as="input" type="hidden" v-model="confidentiality" />
+                <Field name="PrivilegesRequired" as="input" type="hidden" v-model="privilegesRequired" />
+                <Field name="Integrity" as="input" type="hidden" v-model="integrity" />
+                <Field name="UserInteraction" as="input" type="hidden" v-model="userInteraction" />
+                <Field name="Availability" as="input" type="hidden" v-model="availability" />
 
                 <!-- Attack Vector -->
                 <div>
@@ -208,24 +116,16 @@
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="option in attackVectorOptions"
-                      :key="option"
-                      :class="[
-                        'rounded-md border px-3 py-1 text-base',
-                        AttackVector === option
-                          ? 'border-gray-400 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-gray-700',
-                      ]"
-                      @click="AttackVector = option"
-                    >
+                    <button v-for="option in attackVectorOptions" :key="option" :class="[
+                      'rounded-md border px-3 py-1 text-base',
+                      AttackVector === option
+                        ? 'border-gray-400 bg-gray-200 text-gray-900'
+                        : 'border-gray-600 bg-gray-700',
+                    ]" @click="AttackVector = option">
                       {{ option }}
                     </button>
                   </div>
-                  <p
-                    class="mt-3 text-sm text-red-500"
-                    v-if="submitCount > 0 && errors.AttackVector"
-                  >
+                  <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.AttackVector">
                     {{ errors.AttackVector }}
                   </p>
                 </div>
@@ -239,24 +139,16 @@
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="option in scopeOptions"
-                      :key="option"
-                      :class="[
-                        'rounded-md border px-3 py-1 text-base',
-                        scope === option
-                          ? 'border-gray-400 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-gray-700',
-                      ]"
-                      @click="scope = option"
-                    >
+                    <button v-for="option in scopeOptions" :key="option" :class="[
+                      'rounded-md border px-3 py-1 text-base',
+                      scope === option
+                        ? 'border-gray-400 bg-gray-200 text-gray-900'
+                        : 'border-gray-600 bg-gray-700',
+                    ]" @click="scope = option">
                       {{ option }}
                     </button>
                   </div>
-                  <p
-                    class="mt-3 text-sm text-red-500"
-                    v-if="submitCount > 0 && errors.Scope"
-                  >
+                  <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.Scope">
                     {{ errors.Scope }}
                   </p>
                 </div>
@@ -270,24 +162,16 @@
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="option in complexityOptions"
-                      :key="option"
-                      :class="[
-                        'rounded-md border px-3 py-1 text-base',
-                        attackComplexity === option
-                          ? 'border-gray-400 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-gray-700',
-                      ]"
-                      @click="attackComplexity = option"
-                    >
+                    <button v-for="option in complexityOptions" :key="option" :class="[
+                      'rounded-md border px-3 py-1 text-base',
+                      attackComplexity === option
+                        ? 'border-gray-400 bg-gray-200 text-gray-900'
+                        : 'border-gray-600 bg-gray-700',
+                    ]" @click="attackComplexity = option">
                       {{ option }}
                     </button>
                   </div>
-                  <p
-                    class="mt-3 text-sm text-red-500"
-                    v-if="submitCount > 0 && errors.AttackComplexity"
-                  >
+                  <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.AttackComplexity">
                     {{ errors.AttackComplexity }}
                   </p>
                 </div>
@@ -301,24 +185,16 @@
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="option in impactOptions"
-                      :key="option"
-                      :class="[
-                        'rounded-md border px-3 py-1 text-base',
-                        confidentiality === option
-                          ? 'border-gray-400 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-gray-700',
-                      ]"
-                      @click="confidentiality = option"
-                    >
+                    <button v-for="option in impactOptions" :key="option" :class="[
+                      'rounded-md border px-3 py-1 text-base',
+                      confidentiality === option
+                        ? 'border-gray-400 bg-gray-200 text-gray-900'
+                        : 'border-gray-600 bg-gray-700',
+                    ]" @click="confidentiality = option">
                       {{ option }}
                     </button>
                   </div>
-                  <p
-                    class="mt-3 text-sm text-red-500"
-                    v-if="submitCount > 0 && errors.Confidentiality"
-                  >
+                  <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.Confidentiality">
                     {{ errors.Confidentiality }}
                   </p>
                 </div>
@@ -326,32 +202,22 @@
                 <!-- Privileges Required -->
                 <div>
                   <div class="mb-2 flex items-center">
-                    <span class="text-base font-medium"
-                      >Privileges Required</span
-                    >
+                    <span class="text-base font-medium">Privileges Required</span>
                     <button class="ml-1 text-gray-400 hover:text-gray-300">
                       <span class="h-4 w-4">ℹ️</span>
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="option in impactOptions"
-                      :key="option"
-                      :class="[
-                        'rounded-md border px-3 py-1 text-base',
-                        privilegesRequired === option
-                          ? 'border-gray-400 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-gray-700',
-                      ]"
-                      @click="privilegesRequired = option"
-                    >
+                    <button v-for="option in impactOptions" :key="option" :class="[
+                      'rounded-md border px-3 py-1 text-base',
+                      privilegesRequired === option
+                        ? 'border-gray-400 bg-gray-200 text-gray-900'
+                        : 'border-gray-600 bg-gray-700',
+                    ]" @click="privilegesRequired = option">
                       {{ option }}
                     </button>
                   </div>
-                  <p
-                    class="mt-3 text-sm text-red-500"
-                    v-if="submitCount > 0 && errors.PrivilegesRequired"
-                  >
+                  <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.PrivilegesRequired">
                     {{ errors.PrivilegesRequired }}
                   </p>
                 </div>
@@ -365,24 +231,16 @@
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="option in impactOptions"
-                      :key="option"
-                      :class="[
-                        'rounded-md border px-3 py-1 text-base',
-                        integrity === option
-                          ? 'border-gray-400 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-gray-700',
-                      ]"
-                      @click="integrity = option"
-                    >
+                    <button v-for="option in impactOptions" :key="option" :class="[
+                      'rounded-md border px-3 py-1 text-base',
+                      integrity === option
+                        ? 'border-gray-400 bg-gray-200 text-gray-900'
+                        : 'border-gray-600 bg-gray-700',
+                    ]" @click="integrity = option">
                       {{ option }}
                     </button>
                   </div>
-                  <p
-                    class="mt-3 text-sm text-red-500"
-                    v-if="submitCount > 0 && errors.Integrity"
-                  >
+                  <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.Integrity">
                     {{ errors.Integrity }}
                   </p>
                 </div>
@@ -396,24 +254,16 @@
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="option in userInteractionOptions"
-                      :key="option"
-                      :class="[
-                        'rounded-md border px-3 py-1 text-base',
-                        userInteraction === option
-                          ? 'border-gray-400 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-gray-700',
-                      ]"
-                      @click="userInteraction = option"
-                    >
+                    <button v-for="option in userInteractionOptions" :key="option" :class="[
+                      'rounded-md border px-3 py-1 text-base',
+                      userInteraction === option
+                        ? 'border-gray-400 bg-gray-200 text-gray-900'
+                        : 'border-gray-600 bg-gray-700',
+                    ]" @click="userInteraction = option">
                       {{ option }}
                     </button>
                   </div>
-                  <p
-                    class="mt-3 text-sm text-red-500"
-                    v-if="submitCount > 0 && errors.UserInteraction"
-                  >
+                  <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.UserInteraction">
                     {{ errors.UserInteraction }}
                   </p>
                 </div>
@@ -427,24 +277,16 @@
                     </button>
                   </div>
                   <div class="flex flex-wrap gap-2">
-                    <button
-                      v-for="option in impactOptions"
-                      :key="option"
-                      :class="[
-                        'rounded-md border px-3 py-1 text-base',
-                        availability === option
-                          ? 'border-gray-400 bg-gray-200 text-gray-900'
-                          : 'border-gray-600 bg-gray-700',
-                      ]"
-                      @click="availability = option"
-                    >
+                    <button v-for="option in impactOptions" :key="option" :class="[
+                      'rounded-md border px-3 py-1 text-base',
+                      availability === option
+                        ? 'border-gray-400 bg-gray-200 text-gray-900'
+                        : 'border-gray-600 bg-gray-700',
+                    ]" @click="availability = option">
                       {{ option }}
                     </button>
                   </div>
-                  <p
-                    class="mt-3 text-sm text-red-500"
-                    v-if="submitCount > 0 && errors.Availability"
-                  >
+                  <p class="mt-3 text-sm text-red-500" v-if="submitCount > 0 && errors.Availability">
                     {{ errors.Availability }}
                   </p>
                 </div>
@@ -459,15 +301,10 @@
             </h2>
 
             <div class="mb-4">
-              <label class="mb-1 block text-base font-medium"
-                >Description of the vulnerability</label
-              >
-              <Field
-                as="textarea"
-                name="VulnerabilityDetails"
+              <label class="mb-1 block text-base font-medium">Description of the vulnerability</label>
+              <Field as="textarea" name="VulnerabilityDetails"
                 class="min-h-[200px] w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
-                v-model="vulnerabilityDescription"
-              />
+                v-model="vulnerabilityDescription" />
               <span class="text-sm text-red-500">{{
                 errors.VulnerabilityDetails
               }}</span>
@@ -487,12 +324,9 @@
               screenshots or other media to support your submission.
             </p>
 
-            <Field
-              as="textarea"
-              name="ValidationSteps"
+            <Field as="textarea" name="ValidationSteps"
               class="min-h-[200px] w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
-              v-model="validationSteps"
-            />
+              v-model="validationSteps" />
             <span class="text-sm text-red-500">{{
               errors.ValidationSteps
             }}</span>
@@ -512,28 +346,15 @@
             </div>
 
             <div
-              class="flex min-h-[200px] flex-col items-center justify-center space-y-2 rounded-lg border-2 border-dashed border-gray-600 bg-gray-800 p-6 text-center"
-            >
-              <i
-                @click="triggerFileUpload"
-                class="fa-solid fa-file cursor-pointer text-3xl text-gray-200"
-              ></i>
-              <label
-                for="file-upload"
-                class="cursor-pointer text-sm text-gray-300 hover:underline"
-              >
+              class="flex min-h-[200px] flex-col items-center justify-center space-y-2 rounded-lg border-2 border-dashed border-gray-600 bg-gray-800 p-6 text-center">
+              <i @click="triggerFileUpload" class="fa-solid fa-file cursor-pointer text-3xl text-gray-200"></i>
+              <label for="file-upload" class="cursor-pointer text-sm text-gray-300 hover:underline">
                 Drag & Drop Or Select More Files From Your Computer (Max. 50MB
                 Per File)
               </label>
-              <Field
-                id="file-upload"
-                name="Attachment"
-                type="file"
-                multiple
+              <Field id="file-upload" name="Attachment" type="file" multiple
                 class="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-white hover:file:bg-secondary"
-                accept=".bmp,.gif,.jpeg,.jpg,.pdf,.png,.mp4,.mov,.csv,.txt,.zip,.json,.xml,.md,.ts"
-                v-model="files"
-              />
+                accept=".bmp,.gif,.jpeg,.jpg,.pdf,.png,.mp4,.mov,.csv,.txt,.zip,.json,.xml,.md,.ts" v-model="files" />
               <span class="text-sm text-red-500">{{ errors.Attachment }}</span>
             </div>
           </div>
@@ -572,44 +393,28 @@
                 </div>
                 <div class="flex justify-between text-base">
                   <span class="text-gray-400">Range of bounty:</span>
-                  <span
-                    >${{ route.query.low }} - ${{ route.query.critical }}</span
-                  >
+                  <span>${{ route.query.low }} - ${{ route.query.critical }}</span>
                 </div>
 
                 <div class="pt-4">
                   <div class="flex items-start gap-2">
-                    <input
-                      type="checkbox"
-                      id="terms"
-                      class="mt-1"
-                      v-model="termsAccepted"
-                    />
+                    <input type="checkbox" id="terms" class="mt-1" v-model="termsAccepted" />
                     <label for="terms" class="text-base">
                       By pressing the 'Submit Report' or 'Publish' I indicate
                       that I have read the Program Info, agree to the
-                      <a href="#" class="ml-1 text-blue-500 hover:underline"
-                        >Terms & Conditions</a
-                      >,
-                      <a href="#" class="ml-1 text-blue-500 hover:underline"
-                        >Code of Conduct</a
-                      >
+                      <a href="#" class="ml-1 text-blue-500 hover:underline">Terms & Conditions</a>,
+                      <a href="#" class="ml-1 text-blue-500 hover:underline">Code of Conduct</a>
                       and acknowledge that I have read the
-                      <a href="#" class="ml-1 text-blue-500 hover:underline"
-                        >Privacy Policy</a
-                      >.
+                      <a href="#" class="ml-1 text-blue-500 hover:underline">Privacy Policy</a>.
                     </label>
                   </div>
                 </div>
               </div>
             </div>
             <div class="mt-4 flex flex-col gap-2">
-              <button
-                :disabled="loading"
+              <button :disabled="loading"
                 class="group/edit flex w-full items-center justify-center gap-3 rounded-md bg-hookYellow py-2 text-center text-xl font-medium tracking-wider text-black transition-all duration-300 ease-in-out hover:scale-105"
-                type="submit"
-                :class="{ 'cursor-not-allowed opacity-50': loading }"
-              >
+                type="submit" :class="{ 'cursor-not-allowed opacity-50': loading }">
                 Submit Report
               </button>
             </div>
@@ -629,8 +434,7 @@ import { useToast } from "vue-toast-notification";
 import * as yup from "yup";
 
 const route = useRoute();
-console.log(route.query.critical);
-console.log(route.query.low);
+
 const fileInput = ref(null);
 const toast = useToast({ position: "top-right", duration: 1500 });
 const schema = yup.object({

@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gradient-to-t from-[#09090B] via-primary to-[#09090B] px-4 py-10 md:px-16">
     <!-- Title -->
-    <div v-if="data">
+    <div v-if="!loading && data">
       <div class="mb-10 text-center">
         <h1 class="text-4xl font-bold text-white">{{ data.firstName }} {{ data.lastName }} Profile</h1>
         <p class="mt-1 text-paragraph">
@@ -13,7 +13,7 @@
         <div class="flex flex-col gap-y-4">
           <div class="rounded-xl bg-secondary/20 p-6 shadow-lg">
             <div class="flex flex-col items-center">
-              <div class="relative cursor-pointer" @click="triggerFileInput">
+              <div class="relative cursor-pointer" @click="triggerFileInput" v-if="!loadingImage">
                 <img :src="previewImage || `https://zeropoint.runasp.net${data.profileImagePath}`" alt="userAvatar"
                   class="h-28 w-28 rounded-full border-4 border-white object-cover shadow" />
                 <span class="absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-white bg-green-500"></span>
@@ -21,7 +21,10 @@
                 <!-- Hidden File Input -->
                 <input ref="fileInput" type="file" accept="image/*" class="hidden" @change="handleImageChange" />
               </div>
-              <h2 v-if="!isLoading" class="mt-4 text-xl font-semibold text-white">
+              <div v-else>
+                <img src="~/assets/img/Spin.svg" class="size-[50px]" width="50" height="50" alt="Spin" />
+              </div>
+              <h2 v-if="!loading" class="mt-4 text-xl font-semibold text-white">
                 {{ data.userName }}
               </h2>
 
@@ -78,89 +81,64 @@
             <h3 class="mt-2 text-xl font-bold text-white">{{ data.reports.length }}</h3>
             <p class="text-paragraph">Completed Reports</p>
           </div>
-          <div class="rounded-xl bg-secondary/20 p-6 shadow-lg">
+          <div v-if="userRole === 'User'" class="rounded-xl bg-secondary/20 p-6 shadow-lg">
             <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
               <font-awesome-icon icon="file-alt" />
               Program Reports
             </h3>
-            <div v-if="userRole === 'Admin'">
-              <!-- <div v-for="report in data.programs" :key="report.title"
-                class="mb-3 flex items-center justify-between rounded-lg bg-secondary/20 p-4">
-                <div>
-                  <h4 class="font-semibold text-white">{{ report.title }}</h4>
-                  <p class="text-sm text-paragraph">
-                    {{ report.duration }} • Completed: {{ report.completed }}
-                  </p>
-                </div>
-                <div class="flex items-center gap-2">
-                  <span v-if="report.score"
-                    class="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-600">
-                    {{ report.score }}%
-                  </span>
-                  <span v-else class="rounded-full bg-orange-100 px-3 py-1 text-sm font-semibold text-orange-600">
-                    In Progress
-                  </span>
-                  <Trophy class="text-hookYellow" />
-                </div>
-              </div> -->
-              <div v-for="program in data.programs" :key="program.id"
-                class="mb-4 flex items-center justify-between rounded-lg bg-secondary/20 p-4 shadow">
-                <div class="flex items-center gap-4">
-                  <img :src="program.image" alt="program-image" class="h-16 w-16 rounded-full object-cover" />
+          </div>
+          <div v-if="userRole === 'Admin'" class="rounded-xl bg-secondary/20 p-6 shadow-lg">
+            <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
+              <font-awesome-icon icon="file-alt" />
+              Admin Programs
+            </h3>
+            <div v-for="program in data.programs" :key="program.id"
+              class="mb-4 flex items-center justify-between rounded-lg bg-secondary/20 p-4 shadow">
+              <nuxt-link :to="localePath(`/programs/${program.id}`)">
+                <div class="flex items-center gap-4 cursor-pointer">
+                  <img :src="`https://zeropoint.runasp.net${program.image}`" :alt="program.title"
+                    class="h-16 w-16 rounded-full object-cover" />
                   <div>
                     <h4 class="text-lg font-bold text-white">{{ program.title }}</h4>
-                    <p class="text-sm text-paragraph">
-                      {{ program.companyName }} • {{ program.collaborationType.toUpperCase() }}
+                    <p class="text-sm  text-white">
+                      {{ program.companyName }} • {{ program.collaborationType }}
                     </p>
-                    <p class="text-xs text-paragraph mt-1">
-                      Vulnerabilities: {{ program.vulnerabilitiesCount }} • Efficiency: {{ program.responseEfficiency
+                    <p class="text-xs text-white mt-1">
+                      Vulnerabilities: {{ program.vulnerabilitiesCount }} • Efficiency: {{
+                        program.responseEfficiency
                       }}%
                     </p>
                   </div>
                 </div>
-                <div class="text-right">
-                  <p class="text-sm font-medium text-white">Status:
-                    <span :class="program.programStatus === 'activity' ? 'text-green-400' : 'text-red-400'">
-                      {{ program.programStatus }}
-                    </span>
-                  </p>
-                  <div class="mt-2 flex flex-wrap gap-1 text-xs text-white">
-                    <span class="rounded bg-red-600/20 px-2 py-1">Critical: {{ program.critical }}</span>
-                    <span class="rounded bg-yellow-500/20 px-2 py-1">High: {{ program.high }}</span>
-                    <span class="rounded bg-blue-500/20 px-2 py-1">Medium: {{ program.medium }}</span>
-                    <span class="rounded bg-green-500/20 px-2 py-1">Low: {{ program.low }}</span>
-                  </div>
+              </nuxt-link>
+              <div class="text-right">
+                <p class="text-sm font-medium text-white">Status:
+                  <span :class="program.programStatus === 'activity' ? 'text-green-400' : 'text-red-400'">
+                    {{ program.programStatus }}
+                  </span>
+                </p>
+                <div class="mt-2 flex flex-wrap gap-1 text-xs text-white">
+                  <span class="rounded bg-red-600/20 px-2 py-1">Critical: {{ program.critical }}</span>
+                  <span class="rounded bg-yellow-500/20 px-2 py-1">High: {{ program.high }}</span>
+                  <span class="rounded bg-blue-500/20 px-2 py-1">Medium: {{ program.medium }}</span>
+                  <span class="rounded bg-green-500/20 px-2 py-1">Low: {{ program.low }}</span>
                 </div>
               </div>
+            </div>
 
-            </div>
-            <div v-else>
-              <div v-if="data.reports && data.reports.length > 0">
-                <div v-for="report in data.reports" :key="report.id"
-                  class="mb-3 flex items-center justify-between rounded-lg bg-secondary/20 p-4">
-                  <nuxt-link :to="localePath(report.programId)">
-                    <div>
-                      <h4 class="font-semibold text-white">{{ report.vulnerabilityTitle }}</h4>
-                      <p class="text-sm text-paragraph">
-                        {{ report.duration }} • Completed: {{ report.completed }}
-                      </p>
-                    </div>
-                    <div class="flex items-center gap-2">
-                      <span class="rounded-full bg-green-100 px-3 py-1 text-sm font-semibold text-green-600">
-                        {{ report.integrity }}%
-                      </span>
-                      <Trophy class="text-hookYellow" />
-                    </div>
-                  </nuxt-link>
-                </div>
-              </div>
-              <div class="flex items-center gap-2 text-hookYellow">
-                You didn't add any program Report yet
-              </div>
-            </div>
           </div>
         </div>
       </div>
+
+
+
+
+
+    </div>
+
+    <div v-else class="flex justify-center">
+      <h1 class="text-white"> <img src="~/assets/img/Spin.svg" class="size-[150px]" width="150" height="150"
+          alt="Spin" /> </h1>
     </div>
 
 
@@ -169,6 +147,8 @@
 </template>
 
 <script setup>
+
+
 import {
   Trophy,
   CircleCheckBig,
@@ -178,7 +158,8 @@ import {
 } from "lucide-vue-next";
 
 const localePath = useLocalePath();
-const loading = ref(false);
+const loading = ref(true);
+const loadingImage = ref(false);
 
 const runtimeConfig = useRuntimeConfig();
 const token = useCookie("token");
@@ -211,16 +192,21 @@ const handleImageChange = async (e) => {
 const updateImage = async () => {
   if (!selectedFile.value) return;
 
-  loading.value = true;
+  loadingImage.value = true;
 
   try {
     const formData = new FormData();
     formData.append('ProfileImage', selectedFile.value);
 
-    const response = await fetch(
-      `${runtimeConfig.public.BaseApi}/Users/${userId.value}/profile-image`,
+    let url = userRole.value === 'Admin' ?
+      `${runtimeConfig.public.BaseApi}/Admins/${userId.value}/profile-image`
+      :
+      `${runtimeConfig.public.BaseApi}/Users/${userId.value}/profile-image`
+
+    const response = await fetch(url
+      ,
       {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
@@ -229,7 +215,6 @@ const updateImage = async () => {
     );
 
     const result = await response.json();
-    console.log("✅ Image uploaded:", result);
 
     await fetchUserData(); // تحديث البيانات بعد رفع الصورة
 
@@ -237,124 +222,46 @@ const updateImage = async () => {
   } catch (err) {
     console.error("❌ Upload failed:", err);
   } finally {
-    loading.value = false;
+    loadingImage.value = false;
   }
 };
 
 const data = ref(null);
 const userError = ref(null);
 
+const admindata = ref()
 const fetchUserData = async () => {
-  const { data: userData, error } = await useFetch('/api/user');
-  data.value = userData.value;
-  console.log(data.value)
-  userError.value = error.value;
+  loading.value = true
+  const url =
+    userRole.value === 'Admin'
+      ? `${runtimeConfig.public.BaseApi}/Admins/current`
+      : `${runtimeConfig.public.BaseApi}/Users/current`
+
+  try {
+    const response = await $fetch(url, {
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
+    })
+
+    admindata.value = response
+    data.value = response
+    console.log('✅ User Data:', data.value)
+  } catch (error) {
+    userError.value = error
+    console.error('❌ Error fetching user data:', error)
+  } finally {
+    loading.value = false
+  }
 };
 
-onMounted(() => {
-  fetchUserData();
-});
-
+onMounted(async () => {
+  fetchUserData()
+})
 definePageMeta({
   middleware: 'auth',
 });
 </script>
-
-<!-- 
-<script setup>
-import {
-  Trophy,
-  CircleCheckBig,
-  Mail,
-  UserRound,
-  Rss
-} from "lucide-vue-next";
-
-const localePath = useLocalePath();
-const loading = ref(false)
-
-const runtimeConfig = useRuntimeConfig();
-const token = useCookie("token");
-const userId = useCookie("userId");
-
-
-
-const fileInput = ref(null);
-const previewImage = ref(null); // for showing selected image
-const selectedFile = ref(null); // for sending in the 
-
-const triggerFileInput = () => {
-  fileInput.value?.click();
-};
-
-const handleImageChange = (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-
-  selectedFile.value = file;
-
-  // Preview image in UI
-  const reader = new FileReader();
-  reader.onload = () => {
-    previewImage.value = reader.result;
-  };
-  reader.readAsDataURL(file);
-};
-const data = ref(null);
-const userError = ref(null);
-
-const fetchUserData = async () => {
-  const { data: userData, error } = await useFetch('/api/user');
-  data.value = userData.value;
-  userError.value = error.value;
-};
-
-
-const updateImage = async () => {
-  loading.value = true;
-  try {
-    const response = await $fetch(
-      `${runtimeConfig.public.BaseApi}/Users/${userId.value}/profile-image`,
-      {
-        headers: {
-          Authorization: `Bearer ${token.value}`,
-        },
-      },
-    );
-
-    await fetchUserData();
-
-    return response;
-  } catch (err) {
-    console.error("Fetch error:", err);
-  } finally {
-    loading.value = false;
-  }
-};
-
-// استدعاء أول مرة
-onMounted(() => {
-  fetchUserData();
-});
-
-
-const userRole = useCookie("userRole");
-
-
-
-
-
-// const { data, error } = await useFetch('/api/user');
-
-
-
-
-definePageMeta({
-  middleware: 'auth',
-})
-
-
-</script> -->
 
 
 <style scoped></style>

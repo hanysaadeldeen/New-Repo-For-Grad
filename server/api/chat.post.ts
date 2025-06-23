@@ -1,5 +1,4 @@
 export default defineEventHandler(async (event) => {
-  console.log("✅ Chat API called");
   const body = await readBody(event);
   const apiKey = process.env.OPENAI_API_KEY;
   const response = await $fetch("https://api.openai.com/v1/chat/completions", {
@@ -16,7 +15,3 @@ export default defineEventHandler(async (event) => {
 
   return response;
 });
-// export default defineEventHandler(() => {
-//   console.log("✅ تم استدعاء API");
-//   return { message: "Hello from API!" };
-// });

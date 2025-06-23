@@ -1,9 +1,5 @@
 <template>
   <div class="bounties container mx-auto mb-16 px-2 max-sm:px-4">
-    <!-- <SectionInfo
-      about="Opportunity Discovery"
-      description="Find the best opportunities for your skills and wallet"
-    /> -->
     <div class="sectionInfo relative flex w-full flex-col gap-5">
       <h1 class="w-full bg-gradient-to-b bg-clip-text text-center text-4xl font-bold text-white md:text-4xl">
         Opportunity Discovery
@@ -46,8 +42,6 @@ const DeleteProgram = async (id: string) => {
   await deleteProgram(id);
   fetchPrograms();
 };
-
-
 let usereRole = useCookie("userRole");
 
 onMounted(() => {

@@ -32,8 +32,6 @@ const props = defineProps({
 const emit = defineEmits(["toggleDropdown"]);
 
 const goToUserInfo = () => {
-    console.log("Go to user info");
-
     emit("toggleDropdown");
 };
 

@@ -28,6 +28,7 @@ export const report = () => {
   }
 
   const userId = useCookie("userId");
+  const token = useCookie("token");
 
   const toast = useToast({ position: "top-right", duration: 1500 });
 
@@ -51,6 +52,9 @@ export const report = () => {
         {
           method: "POST",
           body: allData,
+          headers: {
+            Authorization: `Bearer ${token.value}`,
+          },
         },
       );
       data.value = response;
@@ -67,7 +71,6 @@ export const report = () => {
   const getAllReports = async (id: string) => {
     loading.value = true;
     error.value = null;
-
     try {
       const response = await $fetch(
         `${config.public.BaseApi}/ReportSubmissions/${id}`,

@@ -72,7 +72,6 @@ export const programsController = async () => {
       );
       if (response && response.success) {
         data.value = response.data;
-        // console.log(data.value);
       }
     } catch (err: any) {
       console.error("Fetch error:", err);
@@ -94,8 +93,6 @@ export const programsController = async () => {
       );
       if (response && response.success) {
         programId.value = response.data;
-
-        // console.log(programId.value);
       }
     } catch (err: any) {
       console.error("Fetch program by ID error:", err);
@@ -109,6 +106,8 @@ export const programsController = async () => {
   const addProgram = async (values: any) => {
     loading.value = true;
     error.value = null;
+
+    console.log(values);
 
     try {
       const data = await $fetch(`${runtimeConfig.public.BaseApi}/BBPrograms`, {

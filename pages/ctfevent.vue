@@ -89,10 +89,6 @@ onMounted(async () => {
         loading.value = false
     }
 })
-if (ctfs.value.length !== 0) {
-    console.log(ctfs.value);
-
-}
 
 function formatDate(dateStr: string) {
     const date = new Date(dateStr)

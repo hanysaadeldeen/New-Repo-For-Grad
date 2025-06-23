@@ -95,9 +95,6 @@ import { programsController } from "~/composables/programs";
 const { fetchProgramById, programId, error, loading } =
   await programsController();
 
-// if (programId) {
-//   console.log(programId.value);
-// }
 
 onMounted(() => {
   fetchProgramById(route.params.id.toString());

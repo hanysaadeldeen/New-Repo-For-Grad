@@ -26,7 +26,6 @@ export const useblogsStore = defineStore("blogs", () => {
   const fetchBlogs = async () => {
     loading.value = true;
     error.value = null;
-    console.log("here1");
     try {
       const { data, error: fetchError } = await useFetch<Blogs[]>(
         `http://zeroapi.runasp.net//api/Blog`,
@@ -41,7 +40,6 @@ export const useblogsStore = defineStore("blogs", () => {
       blogs.value = data.value || [];
     } catch (err: any) {
       error.value = err.message || "Unknown error";
-      console.log(err);
     } finally {
       loading.value = false;
     }
@@ -68,7 +66,6 @@ export const useblogsStore = defineStore("blogs", () => {
         error.value = "Blog not found";
         return;
       } else {
-        console.log(data.value);
       }
       blogId.value = data.value!;
     } catch (err: any) {

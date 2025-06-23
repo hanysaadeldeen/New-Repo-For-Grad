@@ -30,6 +30,7 @@ export const blogsController = () => {
 
   interface AddBlog {
     image: string;
+    title: string;
     introduction: string;
     whatIsFog: string;
     technicalInvestigation: string;
@@ -55,11 +56,7 @@ export const blogsController = () => {
     error.value = null;
 
     try {
-      const res = await $fetch<Blogs>(`${config.public.BaseApi}/Blog/${id}`, {
-        headers: {
-          "ngrok-skip-browser-warning": "true",
-        },
-      });
+      const res = await $fetch<Blogs>(`${config.public.BaseApi}/Blog/${id}`);
       blogId.value = res;
     } catch (err: any) {
       error.value = err.data?.message || err.message || "Unknown error";
@@ -67,6 +64,7 @@ export const blogsController = () => {
       loading.value = false;
     }
   };
+  const token = useCookie("token");
 
   const addBlog = async (data: AddBlog) => {
     loading.value = true;
@@ -74,17 +72,20 @@ export const blogsController = () => {
 
     const formdata = new FormData();
     formdata.append("image", data.image);
+    formdata.append("title", data.title);
     formdata.append("introduction", data.introduction);
     formdata.append("whatIsFog", data.whatIsFog);
     formdata.append("technicalInvestigation", data.technicalInvestigation);
     formdata.append("dataLeakSite", data.dataLeakSite);
+
+    console.log("here");
 
     try {
       const res = await $fetch(`${config.public.BaseApi}/Blog`, {
         method: "POST",
         body: formdata,
         headers: {
-          "ngrok-skip-browser-warning": "true",
+          Authorization: `Bearer ${token.value}`,
         },
       });
 
