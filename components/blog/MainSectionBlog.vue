@@ -38,7 +38,7 @@
 <script setup lang="ts">
 // const { locale } = useI18n();
 // :src="runtimeConfig.public.BaseApi + blogs[0].image"
-const runtimeConfig = useRuntimeConfig();
+
 
 // interface Section {
 //   title: string;

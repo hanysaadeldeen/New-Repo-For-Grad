@@ -21,8 +21,6 @@ export const useblogsStore = defineStore("blogs", () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  const runtimeConfig = useRuntimeConfig();
-
   const fetchBlogs = async () => {
     loading.value = true;
     error.value = null;

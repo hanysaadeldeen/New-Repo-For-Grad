@@ -64,7 +64,7 @@ import { blogsController } from "~/composables/blogs";
 let usereRole = useCookie("userRole");
 const localePath = useLocalePath();
 
-const config = useRuntimeConfig();
+// const config = useRuntimeConfig();
 
 
 const blogs = ref(null)

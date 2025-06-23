@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
 const localePath = useLocalePath();
-const runtimeConfig = useRuntimeConfig();
 
 
 function formatDate(value) {
