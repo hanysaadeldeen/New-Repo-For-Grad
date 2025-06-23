@@ -33,7 +33,7 @@
           </h1>
           <div class="flex flex-col gap-4">
             <h3 class="text-xl font-bold text-white md:text-2xl">
-              Introduction
+              Summary
             </h3>
             <p class="text-lg text-paragraph">
               {{ blog.introduction }}
@@ -41,7 +41,7 @@
           </div>
           <div class="flex flex-col gap-4">
             <h3 class="text-xl font-bold text-white md:text-2xl">
-              what is Fog ?
+              what is Impact ?
             </h3>
             <p class="text-lg text-paragraph">
               {{ blog.whatIsFog }}
@@ -49,7 +49,7 @@
           </div>
           <div class="flex flex-col gap-4">
             <h3 class="text-xl font-bold text-white md:text-2xl">
-              Technical investigation
+              Steps to Reproduce
             </h3>
             <p class="text-lg text-paragraph">
               {{ blog.technicalInvestigation }}
@@ -57,7 +57,7 @@
           </div>
           <div class="flex flex-col gap-4">
             <h3 class="text-xl font-bold text-white md:text-2xl">
-              Data Leak Site (DLS)
+              Suggested Fix
             </h3>
             <p class="text-lg text-paragraph">
               {{ blog.dataLeakSite }}

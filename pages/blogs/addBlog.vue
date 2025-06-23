@@ -34,13 +34,13 @@
             :class="{ 'border-red-500': errors.title }" />
           <span class="text-sm text-red-500">{{ errors.title }}</span>
         </div>
-        <!-- Introduction -->
+        <!-- Summary -->
 
         <div class="mb-4">
           <label for="introduction" class="mb-2 inline-block cursor-pointer text-xl font-semibold text-gray-300">
-            Introduction
+            Summary
           </label>
-          <Field id="introduction" name="introduction" as="textarea" rows="4" placeholder="Enter Introduction"
+          <Field id="introduction" name="introduction" as="textarea" rows="4" placeholder="Enter Summary"
             class="min-h-[100px] w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
             :class="{ 'border-red-500': errors.introduction }" />
           <span class="text-sm text-red-500">{{ errors.introduction }}</span>
@@ -49,9 +49,9 @@
         <!-- What is Fog -->
         <div class="mb-4">
           <label for="whatIsFog" class="mb-2 inline-block cursor-pointer text-xl font-semibold text-gray-300">
-            What is Fog
+            What is Impact
           </label>
-          <Field id="whatIsFog" name="whatIsFog" as="textarea" rows="4" placeholder="Enter What is Fog"
+          <Field id="whatIsFog" name="whatIsFog" as="textarea" rows="4" placeholder="Enter What is Impact"
             class="min-h-[100px] w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
             :class="{ 'border-red-500': errors.whatIsFog }" />
           <span class="text-sm text-red-500">{{ errors.whatIsFog }}</span>
@@ -61,10 +61,10 @@
         <div class="mb-4">
           <label for="technicalInvestigation"
             class="mb-2 inline-block cursor-pointer text-xl font-semibold text-gray-300">
-            Technical Investigation
+            Steps to Reproduce
           </label>
           <Field id="technicalInvestigation" name="technicalInvestigation" as="textarea" rows="4"
-            placeholder="Enter Technical Investigation"
+            placeholder="Enter Steps to Reproduce"
             class="min-h-[100px] w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
             :class="{ 'border-red-500': errors.technicalInvestigation }" />
           <span class="text-sm text-red-500">{{
@@ -75,9 +75,9 @@
         <!-- Data Leak Site (DLS) -->
         <div class="mb-4">
           <label for="dataLeakSite" class="mb-2 inline-block cursor-pointer text-xl font-semibold text-gray-300">
-            Data Leak Site (DLS)
+            Suggested Fix
           </label>
-          <Field id="dataLeakSite" name="dataLeakSite" as="textarea" rows="4" placeholder="Enter Data Leak Site Details"
+          <Field id="dataLeakSite" name="dataLeakSite" as="textarea" rows="4" placeholder="Enter Suggested Fix"
             class="min-h-[100px] w-full rounded-md border border-gray-600 bg-gray-800 px-3 py-2"
             :class="{ 'border-red-500': errors.dataLeakSite }" />
           <span class="text-sm text-red-500">{{ errors.dataLeakSite }}</span>
