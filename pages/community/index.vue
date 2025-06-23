@@ -3,7 +3,7 @@
     <section>
 
 
-      <div class="">
+      <div class="mb-10">
 
         <h1 class="mb-8 w-full bg-gradient-to-b bg-clip-text text-center text-4xl font-bold text-white md:text-4xl">
           Community Posts
@@ -58,7 +58,16 @@
           </div>
         </div>
       </div>
+
+      <nuxt-link to="/community/addPost">
+        <button
+          class="group/edit mx-auto flex w-fit items-center justify-center gap-3 rounded-full bg-hookYellow px-10 py-3 text-center text-xl font-medium tracking-wider text-black transition-all duration-300 ease-in-out hover:scale-105">
+          Add Post
+        </button></nuxt-link>
+
+
     </section>
+
   </div>
 </template>
 <script setup>
