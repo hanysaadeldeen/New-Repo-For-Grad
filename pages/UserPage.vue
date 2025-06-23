@@ -86,12 +86,42 @@
               <font-awesome-icon icon="file-alt" />
               Program Reports
             </h3>
+            <div v-for="report in data.reports" :key="report.id"
+              class="mb-4 flex items-center justify-between rounded-lg bg-secondary/20 p-4 shadow">
+              <div class="flex items-center gap-4 cursor-pointer">
+                <div
+                  class="h-16 w-16 flex items-center justify-center rounded-full bg-primary text-white text-xl font-bold">
+                  {{ report.severityLevel.charAt(0).toUpperCase() }}
+                </div>
+                <div>
+                  <h4 class="text-lg font-bold text-white">{{ report.vulnerabilityTitle }}</h4>
+                  <p class="text-sm text-white">
+                    Target: {{ report.vulnerabilityTarget }} • Category: {{ report.vulnerabilityCategory }}
+                  </p>
+                  <p class="text-xs text-white mt-1">
+                    Severity: {{ report.severityLevel }} • Vector: {{ report.attackVector }} • Scope: {{ report.scope }}
+                  </p>
+                </div>
+              </div>
+              <div class="text-right">
+                <p class="text-sm font-medium text-white">
+                  Complexity: <span class="text-yellow-300">{{ report.attackComplexity }}</span>
+                </p>
+                <div class="mt-2 flex flex-wrap gap-1 text-xs text-white">
+                  <span class="rounded bg-red-600/20 px-2 py-1">Conf: {{ report.confidentiality }}</span>
+                  <span class="rounded bg-blue-500/20 px-2 py-1">Integ: {{ report.integrity }}</span>
+                  <span class="rounded bg-green-500/20 px-2 py-1">Avail: {{ report.availability }}</span>
+                </div>
+              </div>
+            </div>
+
           </div>
           <div v-if="userRole === 'Admin'" class="rounded-xl bg-secondary/20 p-6 shadow-lg">
             <h3 class="mb-4 flex items-center gap-2 text-lg font-semibold text-white">
               <font-awesome-icon icon="file-alt" />
               Admin Programs
             </h3>
+
             <div v-for="program in data.programs" :key="program.id"
               class="mb-4 flex items-center justify-between rounded-lg bg-secondary/20 p-4 shadow">
               <nuxt-link :to="localePath(`/programs/${program.id}`)">

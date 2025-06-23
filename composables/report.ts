@@ -42,6 +42,45 @@ export const report = () => {
       userId: userId.value,
     };
 
+    const formData = new FormData();
+
+    // أولًا نضيف programId و userId
+    formData.append("ProgramId", programID);
+    formData.append("UserId", userId.value);
+
+    // بعدين نضيف باقي الحقول من values
+    const keys = [
+      "VulnerabilityTitle",
+      "VulnerabilityTarget",
+      "VulnerabilityCategory",
+      "SeverityLevel",
+      "AttackVector",
+      "AttackComplexity",
+      "PrivilegesRequired",
+      "UserInteraction",
+      "Scope",
+      "Confidentiality",
+      "Integrity",
+      "Availability",
+      "VulnerabilityDetails",
+      "ValidationSteps",
+    ];
+
+    keys.forEach((key) => {
+      formData.append(key, values[key]);
+    });
+
+    // وأخيرًا نضيف الملف
+    if (values.Attachment && values.Attachment instanceof File) {
+      formData.append("Attachment", values.Attachment);
+    }
+
+    // 🔍 تأكد من القيم قبل الإرسال
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+    // const formData = new FormData();
+
     if (!userId.value) {
       toast.error("User ID not found");
       return;
@@ -51,7 +90,7 @@ export const report = () => {
         `${config.public.BaseApi}/ReportSubmissions`,
         {
           method: "POST",
-          body: allData,
+          body: formData,
           headers: {
             Authorization: `Bearer ${token.value}`,
           },

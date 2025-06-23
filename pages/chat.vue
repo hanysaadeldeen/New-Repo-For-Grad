@@ -29,6 +29,8 @@ import { ref, onMounted } from 'vue'
 const API_KEY = 'AIzaSyAldzdCk4LKK2jl6gUBj7n4GGE2-2gvPok'
 const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`
 
+
+
 // ====================
 // Reactive References
 // ====================

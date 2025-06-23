@@ -1,7 +1,8 @@
 <template>
   <div class="overflow-hidden text-white transition-colors duration-200">
     <!-- Main form column -->
-    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, submitCount }">
+
+    <Form @submit="onSubmit" :validation-schema="schema" v-slot="{ errors, submitCount, setFieldValue }">
       <div class="flex flex-col gap-8 px-2 md:flex-row">
         <div class="report-section1 flex-1">
           <h1 class="mb-6 text-3xl font-bold">Submit Report</h1>
@@ -347,16 +348,32 @@
 
             <div
               class="flex min-h-[200px] flex-col items-center justify-center space-y-2 rounded-lg border-2 border-dashed border-gray-600 bg-gray-800 p-6 text-center">
+
+              <i @click="triggerFileUpload" class="fa-solid fa-file cursor-pointer text-3xl text-gray-200"></i>
+
+              <label for="file-upload" class="cursor-pointer text-sm text-gray-300 hover:underline">
+                Drag & Drop Or Select More Files From Your Computer (Max. 50MB Per File)
+              </label>
+
+              <input ref="fileInput" id="file-upload" name="Attachment" type="file"
+                accept=".bmp,.gif,.jpeg,.jpg,.pdf,.png,.mp4,.mov,.csv,.txt,.zip,.json,.xml,.md,.ts"
+                class="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-white hover:file:bg-secondary"
+                @change="(e) => handleFileChange(e, setFieldValue)" />
+
+              <span class="text-sm text-red-500">{{ errors.Attachment }}</span>
+            </div>
+            <!-- <div
+              class="flex min-h-[200px] flex-col items-center justify-center space-y-2 rounded-lg border-2 border-dashed border-gray-600 bg-gray-800 p-6 text-center">
               <i @click="triggerFileUpload" class="fa-solid fa-file cursor-pointer text-3xl text-gray-200"></i>
               <label for="file-upload" class="cursor-pointer text-sm text-gray-300 hover:underline">
                 Drag & Drop Or Select More Files From Your Computer (Max. 50MB
                 Per File)
               </label>
-              <Field id="file-upload" name="Attachment" type="file" multiple
+              <Field id="file-upload" name="Attachment" type="file" multiple 
                 class="block w-full text-sm text-gray-500 file:mr-4 file:rounded-md file:border-0 file:bg-primary file:px-4 file:py-2 file:text-white hover:file:bg-secondary"
                 accept=".bmp,.gif,.jpeg,.jpg,.pdf,.png,.mp4,.mov,.csv,.txt,.zip,.json,.xml,.md,.ts" v-model="files" />
               <span class="text-sm text-red-500">{{ errors.Attachment }}</span>
-            </div>
+            </div> -->
           </div>
         </div>
         <!-- Sidebar -->
@@ -458,7 +475,12 @@ const schema = yup.object({
     .string()
     .min(50, "Validation must be at least 50 characters")
     .required("Description is required"),
-  // Attachment: yup.mixed().required("At least one file is required"),
+  Attachment: yup
+    .mixed()
+    .required("File is required")
+    .test("fileSize", "File is too large", (file) => {
+      return file && file.size <= 50 * 1024 * 1024; // 50MB
+    }),
   SeverityLevel: yup.string().required("Please select a severity level"),
   AttackVector: yup.string().required("Please select a Attack Vector"),
   AttackComplexity: yup.string().required("Please select a Attack Complexity"),
@@ -471,9 +493,15 @@ const schema = yup.object({
   Integrity: yup.string().required("Please select a Integrity"),
   Availability: yup.string().required("Please select a Availability"),
 });
+const handleFileChange = (e, setFieldValue) => {
+  const file = e.target.files[0]; // ← أول ملف فقط
+  setFieldValue("Attachment", file);
+};
+
 const triggerFileUpload = () => {
   fileInput.value?.click();
 };
+
 onMounted(() => {
   gsap.from(".report-section1", {
     opacity: 0,
@@ -572,6 +600,7 @@ const userInteractionOptions = ["None", "Required"];
 
 const { data, error, loading, addReport } = report();
 const onSubmit = async (values) => {
+
   await addReport(params.id, values);
   if (data.value) {
     toast.success("Report added successfully");
