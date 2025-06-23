@@ -24,12 +24,17 @@ export const ProgramReports = () => {
 
   const AllReports = ref<Report[]>([]);
   const getProgramReports = async (id: any) => {
+    console.log("here!!!!!!!!!!!!!!!!!!!!!!");
+
     try {
       const response = await $fetch<Report[]>(
         `${config.public.BaseApi}/ReportSubmissions/program/${id}`,
       );
+      console.log(response);
+
       if (response) {
         AllReports.value = response;
+        console.log(AllReports.value);
       }
       return response;
     } catch (error: any) {

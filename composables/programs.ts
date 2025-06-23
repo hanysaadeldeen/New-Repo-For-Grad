@@ -170,6 +170,9 @@ export const programsController = async () => {
         `${runtimeConfig.public.BaseApi}/BBPrograms/${id}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token.value}`,
+          },
         },
       );
       fetchPrograms();

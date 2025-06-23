@@ -43,7 +43,7 @@
         </div>
 
         <div v-else class="text-gray-400 text-center mt-20 text-lg">
-            No reports available for this program.
+            No reports available for this programs.
         </div>
     </section>
 </template>
@@ -56,9 +56,7 @@ const { params } = useRoute()
 const { AllReports, getProgramReports } = ProgramReports()
 
 onMounted(() => {
-    if (params.id) {
-        getProgramReports(params.id)
-    }
+    getProgramReports(params.id)
 })
 
 </script>
