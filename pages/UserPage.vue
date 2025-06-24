@@ -112,7 +112,7 @@
                   </p>
                   <div class="mt-2 flex flex-wrap gap-1 text-xs text-white">
                     <span class="rounded bg-red-600/20 px-2 py-1">Conf: {{ report.confidentiality }}</span>
-                    <span class="rounded bg-blue-500/20 px-2 py-1">Integ: {{ report.integrity }}</span>
+                    <span class="rounded bg-blue-500/20 px-2 py-1">Integ: {{ report.vulnerabilityTarget }}</span>
                     <span class="rounded bg-green-500/20 px-2 py-1">Avail: {{ report.availability }}</span>
                   </div>
                 </div>

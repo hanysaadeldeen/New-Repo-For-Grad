@@ -40,6 +40,8 @@
         }}</span>
       </Field>
 
+
+
       <img v-if="imagePreview" :src="imagePreview" alt="Preview" class="mt-4 w-24 h-24  rounded-full object-cover" />
     </div>
     <!-- Targets -->
@@ -416,8 +418,13 @@ const onSubmit = async (values: any) => {
   };
 
   const response = await addProgram(data);
+
   if (response) {
+    console.log("response", response);
+
     if (response.data) {
+      console.log("response.data", response.data);
+
       toast.success("Program added successfully");
       setTimeout(() => {
         router.push("/programs");

@@ -17,11 +17,7 @@
         class="rounded-md bg-[#152738] px-5 py-2 text-center text-xl font-medium tracking-wider text-white max-md:w-full">
         {{ blog.authorName }}
       </button>
-      <!-- <p class="line-clamp-3 text-xl text-paragraph">
-        {{ blog?.sections[0].content }}
-      </p> -->
       <nuxt-link :to="localePath(`/blogs/${blog.id}`)">
-
         <Button title="Read More" isArrow />
       </nuxt-link>
     </div>

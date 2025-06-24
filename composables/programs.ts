@@ -63,15 +63,18 @@ export const programsController = async () => {
   }
 
   const token = useCookie("token");
+
   const fetchPrograms = async () => {
     loading.value = true;
+
     try {
       const response = await $fetch<ProgramCard[]>(
         `${runtimeConfig.public.BaseApi}/BBPrograms`,
         { method: "GET" },
       );
-      if (response && response.success) {
-        data.value = response.data;
+
+      if (response) {
+        data.value = response;
       }
     } catch (err: any) {
       console.error("Fetch error:", err);
@@ -91,8 +94,9 @@ export const programsController = async () => {
           method: "GET",
         },
       );
-      if (response && response.success) {
-        programId.value = response.data;
+
+      if (response) {
+        programId.value = response;
       }
     } catch (err: any) {
       console.error("Fetch program by ID error:", err);
@@ -108,11 +112,24 @@ export const programsController = async () => {
     error.value = null;
 
     console.log(values);
+    const formData = new FormData();
+
+    Object.keys(values).forEach((key) => {
+      const value = values[key];
+
+      if (value !== undefined && value !== null) {
+        if (typeof value === "object" && !(value instanceof File)) {
+          formData.append(key, JSON.stringify(value));
+        } else {
+          formData.append(key, value);
+        }
+      }
+    });
 
     try {
       const data = await $fetch(`${runtimeConfig.public.BaseApi}/BBPrograms`, {
         method: "POST",
-        body: values,
+        body: formData,
         headers: {
           Authorization: `Bearer ${token.value}`,
         },
